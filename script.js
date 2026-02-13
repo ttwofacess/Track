@@ -55,16 +55,19 @@ function deleteCategory(index) {
     }
 }
 
+let editingExpenseId = null;
+
 // Función para renderizar gastos
 function renderExpenses() {
     const expenseList = document.getElementById('expenseList');
+    if (!expenseList) return;
     expenseList.innerHTML = '';
     
     expenses.forEach(expense => {
         const li = document.createElement('li');
         li.innerHTML = `
             <div class="expense-details">
-                <strong>${expense.category}</strong><br>
+                <strong>${expense.category}</strong> - $${expense.amount}<br>
                 <small>${expense.date}</small><br>
                 <em>${expense.description}</em>
             </div>
@@ -77,6 +80,29 @@ function renderExpenses() {
     });
 }
 
+// Función para editar un gasto
+function editExpense(id) {
+    const expense = expenses.find(e => e.id === id);
+    if (!expense) return;
+
+    document.getElementById('category').value = expense.category;
+    document.getElementById('amount').value = expense.amount;
+    document.getElementById('date').value = expense.date;
+    document.getElementById('description').value = expense.description;
+
+    editingExpenseId = id;
+    document.querySelector('#expenseForm button[type="submit"]').textContent = 'Actualizar Gasto';
+}
+
+// Función para eliminar un gasto
+function deleteExpense(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar este gasto?')) {
+        expenses = expenses.filter(e => e.id !== id);
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+        renderExpenses();
+    }
+}
+
 // Función para agregar una categoría
 function addCategory() {
     const categoryName = prompt("Ingrese el nombre de la categoría:");
@@ -87,8 +113,8 @@ function addCategory() {
     }
 }
 
-// Función para agregar un gasto
-function addExpense() {
+// Función para agregar o actualizar un gasto
+function saveExpense() {
     const category = document.getElementById('category').value;
     const amount = parseFloat(document.getElementById('amount').value);
     const date = document.getElementById('date').value;
@@ -96,15 +122,26 @@ function addExpense() {
 
     if (!category || isNaN(amount) || !date) return;
 
-    const expense = {
-        id: Date.now(),
-        category,
-        amount,
-        date,
-        description
-    };
+    if (editingExpenseId) {
+        // Actualizar gasto existente
+        const index = expenses.findIndex(e => e.id === editingExpenseId);
+        if (index !== -1) {
+            expenses[index] = { ...expenses[index], category, amount, date, description };
+        }
+        editingExpenseId = null;
+        document.querySelector('#expenseForm button[type="submit"]').textContent = 'Agregar Gasto';
+    } else {
+        // Crear nuevo gasto
+        const expense = {
+            id: Date.now(),
+            category,
+            amount,
+            date,
+            description
+        };
+        expenses.push(expense);
+    }
 
-    expenses.push(expense);
     localStorage.setItem('expenses', JSON.stringify(expenses));
     renderExpenses();
     document.getElementById('expenseForm').reset();
@@ -114,7 +151,7 @@ function addExpense() {
 document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
 document.getElementById('expenseForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    addExpense();
+    saveExpense();
 });
 
 // Renderizar al cargar la página
