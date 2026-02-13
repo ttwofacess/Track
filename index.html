@@ -44,6 +44,23 @@
                 <button id="addCategoryBtn">Agregar Categoría</button>
             </section>
 
+            <!-- Resumen de Gastos -->
+            <section class="summary-section">
+                <h2>Resumen de Gastos</h2>
+                <div class="summary-controls">
+                    <label for="periodSelect">Ver por:</label>
+                    <select id="periodSelect">
+                        <option value="daily">Diario</option>
+                        <option value="weekly">Semanal</option>
+                        <option value="monthly">Mensual</option>
+                        <option value="total">Total Histórico</option>
+                    </select>
+                </div>
+                <div class="summary-total">
+                    <h3>Total: <span id="totalAmount">$0.00</span></h3>
+                </div>
+            </section>
+
             <!-- Lista de gastos -->
             <section class="expenses-section">
                 <h2>Historial de Gastos</h2>

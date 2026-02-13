@@ -57,7 +57,47 @@ function deleteCategory(index) {
 
 let editingExpenseId = null;
 
-// Función para renderizar gastos
+// Función para actualizar el resumen de gastos
+function updateSummary() {
+    const periodSelect = document.getElementById('periodSelect');
+    if (!periodSelect) return;
+    
+    const period = periodSelect.value;
+    const now = new Date();
+    // Ajustar 'now' para ignorar la hora en comparaciones diarias
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    let total = 0;
+
+    expenses.forEach(expense => {
+        // El input date devuelve YYYY-MM-DD, lo tratamos como fecha local
+        const [year, month, day] = expense.date.split('-').map(Number);
+        const expenseDate = new Date(year, month - 1, day);
+        
+        let include = false;
+
+        if (period === 'daily') {
+            include = expenseDate.getTime() === today.getTime();
+        } else if (period === 'weekly') {
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay()); // Inicio de semana (Domingo)
+            include = expenseDate >= startOfWeek;
+        } else if (period === 'monthly') {
+            include = expenseDate.getMonth() === today.getMonth() && 
+                      expenseDate.getFullYear() === today.getFullYear();
+        } else if (period === 'total') {
+            include = true;
+        }
+
+        if (include) {
+            total += expense.amount;
+        }
+    });
+
+    document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+}
+
+// Renderizar gastos
 function renderExpenses() {
     const expenseList = document.getElementById('expenseList');
     if (!expenseList) return;
@@ -67,7 +107,7 @@ function renderExpenses() {
         const li = document.createElement('li');
         li.innerHTML = `
             <div class="expense-details">
-                <strong>${expense.category}</strong> - $${expense.amount}<br>
+                <strong>${expense.category}</strong> - $${expense.amount.toFixed(2)}<br>
                 <small>${expense.date}</small><br>
                 <em>${expense.description}</em>
             </div>
@@ -78,74 +118,10 @@ function renderExpenses() {
         `;
         expenseList.appendChild(li);
     });
+    updateSummary(); // Actualizar resumen al renderizar gastos
 }
 
-// Función para editar un gasto
-function editExpense(id) {
-    const expense = expenses.find(e => e.id === id);
-    if (!expense) return;
-
-    document.getElementById('category').value = expense.category;
-    document.getElementById('amount').value = expense.amount;
-    document.getElementById('date').value = expense.date;
-    document.getElementById('description').value = expense.description;
-
-    editingExpenseId = id;
-    document.querySelector('#expenseForm button[type="submit"]').textContent = 'Actualizar Gasto';
-}
-
-// Función para eliminar un gasto
-function deleteExpense(id) {
-    if (confirm('¿Estás seguro de que deseas eliminar este gasto?')) {
-        expenses = expenses.filter(e => e.id !== id);
-        localStorage.setItem('expenses', JSON.stringify(expenses));
-        renderExpenses();
-    }
-}
-
-// Función para agregar una categoría
-function addCategory() {
-    const categoryName = prompt("Ingrese el nombre de la categoría:");
-    if (categoryName && !categories.includes(categoryName)) {
-        categories.push(categoryName);
-        localStorage.setItem('categories', JSON.stringify(categories));
-        renderCategories();
-    }
-}
-
-// Función para agregar o actualizar un gasto
-function saveExpense() {
-    const category = document.getElementById('category').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const date = document.getElementById('date').value;
-    const description = document.getElementById('description').value;
-
-    if (!category || isNaN(amount) || !date) return;
-
-    if (editingExpenseId) {
-        // Actualizar gasto existente
-        const index = expenses.findIndex(e => e.id === editingExpenseId);
-        if (index !== -1) {
-            expenses[index] = { ...expenses[index], category, amount, date, description };
-        }
-        editingExpenseId = null;
-        document.querySelector('#expenseForm button[type="submit"]').textContent = 'Agregar Gasto';
-    } else {
-        // Crear nuevo gasto
-        const expense = {
-            id: Date.now(),
-            category,
-            amount,
-            date,
-            description
-        };
-        expenses.push(expense);
-    }
-
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-    renderExpenses();
-    document.getElementById('expenseForm').reset();
-}
+// ... (resto de funciones)
 
 // Función para manejar eventos
 document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
@@ -153,6 +129,7 @@ document.getElementById('expenseForm').addEventListener('submit', function(e) {
     e.preventDefault();
     saveExpense();
 });
+document.getElementById('periodSelect').addEventListener('change', updateSummary);
 
 // Renderizar al cargar la página
 renderCategories();
