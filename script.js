@@ -5,18 +5,54 @@ let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 // Función para renderizar categorías
 function renderCategories() {
     const categoryList = document.getElementById('categoryList');
+    const categorySelect = document.getElementById('category');
+    
+    if (!categoryList || !categorySelect) return;
+
     categoryList.innerHTML = '';
+    categorySelect.innerHTML = '<option value="">Seleccionar categoría</option>';
     
     categories.forEach((category, index) => {
         const div = document.createElement('div');
         div.className = 'category';
         div.innerHTML = `
             <span>${category}</span>
-            <button class="btn-edit" onclick="editCategory(${index})">Editar</button>
-            <button class="btn-delete" onclick="deleteCategory(${index})">Eliminar</button>
+            <div class="category-buttons">
+                <button class="btn-edit" onclick="editCategory(${index})">Editar</button>
+                <button class="btn-delete" onclick="deleteCategory(${index})">Eliminar</button>
+            </div>
         `;
         categoryList.appendChild(div);
+
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
     });
+}
+
+// Función para editar una categoría
+function editCategory(index) {
+    const newName = prompt("Editar nombre de la categoría:", categories[index]);
+    if (newName && newName !== categories[index]) {
+        if (!categories.includes(newName)) {
+            categories[index] = newName;
+            localStorage.setItem('categories', JSON.stringify(categories));
+            renderCategories();
+            renderExpenses(); // Re-renderizar gastos para reflejar cambios si fuera necesario
+        } else {
+            alert("Esa categoría ya existe.");
+        }
+    }
+}
+
+// Función para eliminar una categoría
+function deleteCategory(index) {
+    if (confirm(`¿Estás seguro de eliminar la categoría "${categories[index]}"?`)) {
+        categories.splice(index, 1);
+        localStorage.setItem('categories', JSON.stringify(categories));
+        renderCategories();
+    }
 }
 
 // Función para renderizar gastos
