@@ -60,25 +60,25 @@ function deleteCategory(index) {
 function updateSummary() {
     const periodSelect = document.getElementById('periodSelect');
     const specificDateInput = document.getElementById('specificDate');
-    const dailyPicker = document.getElementById('dailyPicker');
+    const datePickerContainer = document.getElementById('datePickerContainer');
     
     if (!periodSelect || !specificDateInput) return;
     
     const period = periodSelect.value;
     
     // Mostrar u ocultar el selector de fecha
-    if (period === 'daily') {
-        dailyPicker.style.display = 'block';
+    if (period === 'daily' || period === 'weekly') {
+        datePickerContainer.style.display = 'block';
     } else {
-        dailyPicker.style.display = 'none';
+        datePickerContainer.style.display = 'none';
     }
 
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
-    // Determinar la fecha de referencia para el filtro diario
+    // Determinar la fecha de referencia para el filtro
     let targetDate = today;
-    if (period === 'daily' && specificDateInput.value) {
+    if (specificDateInput.value) {
         const [year, month, day] = specificDateInput.value.split('-').map(Number);
         targetDate = new Date(year, month - 1, day);
     }
@@ -94,9 +94,12 @@ function updateSummary() {
         if (period === 'daily') {
             include = expenseDate.getTime() === targetDate.getTime();
         } else if (period === 'weekly') {
-            const startOfWeek = new Date(today);
-            startOfWeek.setDate(today.getDate() - today.getDay());
-            include = expenseDate >= startOfWeek;
+            const startOfWeek = new Date(targetDate);
+            startOfWeek.setDate(targetDate.getDate() - targetDate.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            include = expenseDate >= startOfWeek && expenseDate <= endOfWeek;
         } else if (period === 'monthly') {
             include = expenseDate.getMonth() === today.getMonth() && 
                       expenseDate.getFullYear() === today.getFullYear();
