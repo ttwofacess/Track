@@ -67,7 +67,7 @@ function updateSummary() {
     const period = periodSelect.value;
     
     // Mostrar u ocultar el selector de fecha
-    if (period === 'daily' || period === 'weekly') {
+    if (period === 'daily' || period === 'weekly' || period === 'monthly') {
         datePickerContainer.style.display = 'block';
     } else {
         datePickerContainer.style.display = 'none';
@@ -101,8 +101,8 @@ function updateSummary() {
             
             include = expenseDate >= startOfWeek && expenseDate <= endOfWeek;
         } else if (period === 'monthly') {
-            include = expenseDate.getMonth() === today.getMonth() && 
-                      expenseDate.getFullYear() === today.getFullYear();
+            include = expenseDate.getMonth() === targetDate.getMonth() && 
+                      expenseDate.getFullYear() === targetDate.getFullYear();
         } else if (period === 'total') {
             include = true;
         }
