@@ -59,12 +59,30 @@ function deleteCategory(index) {
 // Función para actualizar el resumen de gastos
 function updateSummary() {
     const periodSelect = document.getElementById('periodSelect');
-    if (!periodSelect) return;
+    const specificDateInput = document.getElementById('specificDate');
+    const dailyPicker = document.getElementById('dailyPicker');
+    
+    if (!periodSelect || !specificDateInput) return;
     
     const period = periodSelect.value;
+    
+    // Mostrar u ocultar el selector de fecha
+    if (period === 'daily') {
+        dailyPicker.style.display = 'block';
+    } else {
+        dailyPicker.style.display = 'none';
+    }
+
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
+    // Determinar la fecha de referencia para el filtro diario
+    let targetDate = today;
+    if (period === 'daily' && specificDateInput.value) {
+        const [year, month, day] = specificDateInput.value.split('-').map(Number);
+        targetDate = new Date(year, month - 1, day);
+    }
+
     let total = 0;
 
     expenses.forEach(expense => {
@@ -74,7 +92,7 @@ function updateSummary() {
         let include = false;
 
         if (period === 'daily') {
-            include = expenseDate.getTime() === today.getTime();
+            include = expenseDate.getTime() === targetDate.getTime();
         } else if (period === 'weekly') {
             const startOfWeek = new Date(today);
             startOfWeek.setDate(today.getDate() - today.getDay());
@@ -191,7 +209,11 @@ document.getElementById('expenseForm').addEventListener('submit', function(e) {
     saveExpense();
 });
 document.getElementById('periodSelect').addEventListener('change', updateSummary);
+document.getElementById('specificDate').addEventListener('change', updateSummary);
 
 // Inicialización
+const todayStr = new Date().toISOString().split('T')[0];
+document.getElementById('specificDate').value = todayStr;
+
 renderCategories();
 renderExpenses();
