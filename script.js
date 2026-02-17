@@ -1,5 +1,22 @@
 // Cargar datos desde localStorage al iniciar
-let categories = JSON.parse(localStorage.getItem('categories')) || [];
+// Sanitiza y valida nombres de categoría
+function sanitizeCategoryName(name) {
+    if (typeof name !== 'string') return '';
+    name = name.trim();
+    if (!name) return '';
+    // Limitar longitud y eliminar caracteres que permitan HTML
+    if (name.length > 50) name = name.slice(0, 50);
+    name = name.replace(/[<>]/g, '');
+    // Normalizar espacios consecutivos
+    name = name.replace(/\s+/g, ' ');
+    return name;
+}
+
+// Cargar y sanitizar datos desde localStorage al iniciar
+let rawCategories = JSON.parse(localStorage.getItem('categories')) || [];
+let categories = Array.isArray(rawCategories)
+    ? rawCategories.map(sanitizeCategoryName).filter((c, i, arr) => c && arr.indexOf(c) === i)
+    : [];
 let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 let editingExpenseId = null;
 
@@ -10,19 +27,35 @@ function renderCategories() {
     
     if (!categoryList || !categorySelect) return;
 
+    // Limpiar
     categoryList.innerHTML = '';
     categorySelect.innerHTML = '<option value="">Seleccionar categoría</option>';
-    
+
     categories.forEach((category, index) => {
         const div = document.createElement('div');
         div.className = 'category';
-        div.innerHTML = `
-            <span>${category}</span>
-            <div class="category-buttons">
-                <button class="btn-edit" onclick="editCategory(${index})">Editar</button>
-                <button class="btn-delete" onclick="deleteCategory(${index})">Eliminar</button>
-            </div>
-        `;
+
+        const span = document.createElement('span');
+        span.textContent = category;
+        div.appendChild(span);
+
+        const btns = document.createElement('div');
+        btns.className = 'category-buttons';
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn-edit';
+        editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function() { editCategory(index); });
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn-delete';
+        delBtn.textContent = 'Eliminar';
+        delBtn.addEventListener('click', function() { deleteCategory(index); });
+
+        btns.appendChild(editBtn);
+        btns.appendChild(delBtn);
+        div.appendChild(btns);
+
         categoryList.appendChild(div);
 
         const option = document.createElement('option');
@@ -34,17 +67,17 @@ function renderCategories() {
 
 // Función para editar una categoría
 function editCategory(index) {
-    const newName = prompt("Editar nombre de la categoría:", categories[index]);
-    if (newName && newName !== categories[index]) {
-        if (!categories.includes(newName)) {
-            categories[index] = newName;
-            localStorage.setItem('categories', JSON.stringify(categories));
-            renderCategories();
-            renderExpenses();
-        } else {
-            alert("Esa categoría ya existe.");
-        }
-    }
+    const current = categories[index] || '';
+    const newNameRaw = prompt("Editar nombre de la categoría:", current);
+    if (newNameRaw === null) return; // cancel
+    const newName = sanitizeCategoryName(newNameRaw);
+    if (!newName) return alert('Nombre de categoría inválido.');
+    if (newName === current) return;
+    if (categories.includes(newName)) return alert('Esa categoría ya existe.');
+    categories[index] = newName;
+    localStorage.setItem('categories', JSON.stringify(categories));
+    renderCategories();
+    renderExpenses();
 }
 
 // Función para eliminar una categoría
@@ -120,20 +153,48 @@ function renderExpenses() {
     const expenseList = document.getElementById('expenseList');
     if (!expenseList) return;
     expenseList.innerHTML = '';
-    
+
     expenses.forEach(expense => {
         const li = document.createElement('li');
-        li.innerHTML = `
-            <div class="expense-details">
-                <strong>${expense.category}</strong> - $${expense.amount.toFixed(2)}<br>
-                <small>${expense.date}</small><br>
-                <em>${expense.description}</em>
-            </div>
-            <div class="btn-group">
-                <button onclick="editExpense(${expense.id})">Editar</button>
-                <button onclick="deleteExpense(${expense.id})">Eliminar</button>
-            </div>
-        `;
+
+        const details = document.createElement('div');
+        details.className = 'expense-details';
+
+        const strong = document.createElement('strong');
+        strong.textContent = expense.category;
+        details.appendChild(strong);
+
+        const text = document.createTextNode(' - $' + Number(expense.amount).toFixed(2));
+        details.appendChild(text);
+
+        details.appendChild(document.createElement('br'));
+
+        const small = document.createElement('small');
+        small.textContent = expense.date;
+        details.appendChild(small);
+
+        details.appendChild(document.createElement('br'));
+
+        const em = document.createElement('em');
+        em.textContent = expense.description || '';
+        details.appendChild(em);
+
+        const btnGroup = document.createElement('div');
+        btnGroup.className = 'btn-group';
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function() { editExpense(expense.id); });
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Eliminar';
+        delBtn.addEventListener('click', function() { deleteExpense(expense.id); });
+
+        btnGroup.appendChild(editBtn);
+        btnGroup.appendChild(delBtn);
+
+        li.appendChild(details);
+        li.appendChild(btnGroup);
         expenseList.appendChild(li);
     });
     updateSummary();
@@ -165,22 +226,29 @@ function deleteExpense(id) {
 
 // Función para agregar una categoría
 function addCategory() {
-    const categoryName = prompt("Ingrese el nombre de la categoría:");
-    if (categoryName && !categories.includes(categoryName)) {
-        categories.push(categoryName);
-        localStorage.setItem('categories', JSON.stringify(categories));
-        renderCategories();
-    }
+    const raw = prompt("Ingrese el nombre de la categoría:");
+    if (raw === null) return; // cancel
+    const categoryName = sanitizeCategoryName(raw);
+    if (!categoryName) return alert('Nombre de categoría inválido.');
+    if (categories.includes(categoryName)) return alert('Esa categoría ya existe.');
+    categories.push(categoryName);
+    localStorage.setItem('categories', JSON.stringify(categories));
+    renderCategories();
 }
 
 // Función para guardar (crear o editar) un gasto
 function saveExpense() {
-    const category = document.getElementById('category').value;
+    const rawCategory = document.getElementById('category').value;
     const amount = parseFloat(document.getElementById('amount').value);
     const date = document.getElementById('date').value;
     const description = document.getElementById('description').value;
 
-    if (!category || isNaN(amount) || !date) return;
+    // Sanitize category and ensure it exists in the canonical categories list
+    const category = sanitizeCategoryName(rawCategory);
+    if (!category || !categories.includes(category)) {
+        return alert('Categoría inválida. Seleccione una categoría válida.');
+    }
+    if (isNaN(amount) || !date) return alert('Monto o fecha inválidos.');
 
     if (editingExpenseId) {
         const index = expenses.findIndex(e => e.id === editingExpenseId);
@@ -188,7 +256,8 @@ function saveExpense() {
             expenses[index] = { ...expenses[index], category, amount, date, description };
         }
         editingExpenseId = null;
-        document.querySelector('#expenseForm button[type="submit"]').textContent = 'Agregar Gasto';
+        const submitBtn = document.querySelector('#expenseForm button[type="submit"]');
+        if (submitBtn) submitBtn.textContent = 'Agregar Gasto';
     } else {
         const expense = {
             id: Date.now(),
@@ -202,7 +271,8 @@ function saveExpense() {
 
     localStorage.setItem('expenses', JSON.stringify(expenses));
     renderExpenses();
-    document.getElementById('expenseForm').reset();
+    const form = document.getElementById('expenseForm');
+    if (form) form.reset();
 }
 
 // Event Listeners
