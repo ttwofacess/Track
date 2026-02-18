@@ -12,6 +12,17 @@ function sanitizeCategoryName(name) {
     return name;
 }
 
+// Sanitiza y valida el monto (amount)
+function sanitizeAmount(value) {
+    let amount = parseFloat(value);
+    if (isNaN(amount) || !isFinite(amount)) return NaN;
+    // Asegurar que sea positivo (los gastos suelen serlo)
+    amount = Math.abs(amount);
+    // Limitar a un rango razonable y 2 decimales
+    if (amount > 9999999.99) amount = 9999999.99;
+    return Math.round(amount * 100) / 100;
+}
+
 // Cargar y sanitizar datos desde localStorage al iniciar
 let rawCategories = JSON.parse(localStorage.getItem('categories')) || [];
 let categories = Array.isArray(rawCategories)
@@ -239,7 +250,8 @@ function addCategory() {
 // Función para guardar (crear o editar) un gasto
 function saveExpense() {
     const rawCategory = document.getElementById('category').value;
-    const amount = parseFloat(document.getElementById('amount').value);
+    const amountRaw = document.getElementById('amount').value;
+    const amount = sanitizeAmount(amountRaw);
     const date = document.getElementById('date').value;
     const description = document.getElementById('description').value;
 
@@ -248,7 +260,10 @@ function saveExpense() {
     if (!category || !categories.includes(category)) {
         return alert('Categoría inválida. Seleccione una categoría válida.');
     }
-    if (isNaN(amount) || !date) return alert('Monto o fecha inválidos.');
+    if (isNaN(amount) || amount <= 0) {
+        return alert('Ingrese un monto válido y positivo (ej. 10.50).');
+    }
+    if (!date) return alert('La fecha es obligatoria.');
 
     if (editingExpenseId) {
         const index = expenses.findIndex(e => e.id === editingExpenseId);
@@ -277,6 +292,26 @@ function saveExpense() {
 
 // Event Listeners
 document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
+
+// Validación y sanitización del input 'amount' en tiempo real
+const amountInput = document.getElementById('amount');
+if (amountInput) {
+    // Evitar caracteres no numéricos innecesarios
+    amountInput.addEventListener('keydown', function(e) {
+        if (['e', 'E', '+', '-'].includes(e.key)) {
+            e.preventDefault();
+        }
+    });
+
+    // Asegurar 2 decimales al perder el foco (blur)
+    amountInput.addEventListener('blur', function() {
+        const val = sanitizeAmount(this.value);
+        if (!isNaN(val)) {
+            this.value = val.toFixed(2);
+        }
+    });
+}
+
 document.getElementById('expenseForm').addEventListener('submit', function(e) {
     e.preventDefault();
     saveExpense();
