@@ -54,6 +54,21 @@ function sanitizeDate(dateStr) {
     return dateStr;
 }
 
+// Sanitiza y valida la descripción
+function sanitizeDescription(text) {
+    if (typeof text !== 'string') return '';
+    // Eliminar espacios al inicio/final
+    text = text.trim();
+    if (!text) return '';
+    // Limitar longitud
+    if (text.length > 200) text = text.slice(0, 200);
+    // Eliminar etiquetas HTML para prevenir inyecciones básicas
+    text = text.replace(/[<>]/g, '');
+    // Normalizar espacios internos
+    text = text.replace(/\s+/g, ' ');
+    return text;
+}
+
 // Cargar y sanitizar datos desde localStorage al iniciar
 let rawCategories = JSON.parse(localStorage.getItem('categories')) || [];
 let categories = Array.isArray(rawCategories)
@@ -285,7 +300,8 @@ function saveExpense() {
     const amount = sanitizeAmount(amountRaw);
     const dateRaw = document.getElementById('date').value;
     const date = sanitizeDate(dateRaw);
-    const description = document.getElementById('description').value;
+    const rawDescription = document.getElementById('description').value;
+    const description = sanitizeDescription(rawDescription);
 
     // Sanitize category and ensure it exists in the canonical categories list
     const category = sanitizeCategoryName(rawCategory);
