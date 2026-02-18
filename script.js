@@ -23,6 +23,37 @@ function sanitizeAmount(value) {
     return Math.round(amount * 100) / 100;
 }
 
+// Sanitiza y valida la fecha (date)
+function sanitizeDate(dateStr) {
+    if (!dateStr || typeof dateStr !== 'string') return null;
+    
+    // Validar formato YYYY-MM-DD
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(dateStr)) return null;
+
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    
+    // Verificar si la fecha es válida (ej: no 30 de febrero)
+    if (isNaN(date.getTime()) || 
+        date.getFullYear() !== year || 
+        date.getMonth() !== month - 1 || 
+        date.getDate() !== day) {
+        return null;
+    }
+
+    // Rango: No más de 10 años atrás, no más de 1 año en el futuro
+    const now = new Date();
+    const minDate = new Date();
+    minDate.setFullYear(now.getFullYear() - 10);
+    const maxDate = new Date();
+    maxDate.setFullYear(now.getFullYear() + 1);
+
+    if (date < minDate || date > maxDate) return null;
+
+    return dateStr;
+}
+
 // Cargar y sanitizar datos desde localStorage al iniciar
 let rawCategories = JSON.parse(localStorage.getItem('categories')) || [];
 let categories = Array.isArray(rawCategories)
@@ -252,7 +283,8 @@ function saveExpense() {
     const rawCategory = document.getElementById('category').value;
     const amountRaw = document.getElementById('amount').value;
     const amount = sanitizeAmount(amountRaw);
-    const date = document.getElementById('date').value;
+    const dateRaw = document.getElementById('date').value;
+    const date = sanitizeDate(dateRaw);
     const description = document.getElementById('description').value;
 
     // Sanitize category and ensure it exists in the canonical categories list
@@ -263,7 +295,9 @@ function saveExpense() {
     if (isNaN(amount) || amount <= 0) {
         return alert('Ingrese un monto válido y positivo (ej. 10.50).');
     }
-    if (!date) return alert('La fecha es obligatoria.');
+    if (!date) {
+        return alert('La fecha es inválida o está fuera de rango (máx. 10 años atrás o 1 año futuro).');
+    }
 
     if (editingExpenseId) {
         const index = expenses.findIndex(e => e.id === editingExpenseId);
@@ -320,7 +354,22 @@ document.getElementById('periodSelect').addEventListener('change', updateSummary
 document.getElementById('specificDate').addEventListener('change', updateSummary);
 
 // Inicialización
-const todayStr = new Date().toISOString().split('T')[0];
+const today = new Date();
+const todayStr = today.toISOString().split('T')[0];
+
+const dateInput = document.getElementById('date');
+if (dateInput) {
+    // Configurar límites para el input
+    const minDate = new Date();
+    minDate.setFullYear(today.getFullYear() - 10);
+    const maxDate = new Date();
+    maxDate.setFullYear(today.getFullYear() + 1);
+
+    dateInput.min = minDate.toISOString().split('T')[0];
+    dateInput.max = maxDate.toISOString().split('T')[0];
+    dateInput.value = todayStr; // Valor por defecto: hoy
+}
+
 document.getElementById('specificDate').value = todayStr;
 
 renderCategories();
