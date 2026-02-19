@@ -69,6 +69,12 @@ function sanitizeDescription(text) {
     return text;
 }
 
+// Sanitiza y valida el período (period)
+function sanitizePeriod(period) {
+    const validPeriods = ['daily', 'weekly', 'monthly', 'total'];
+    return validPeriods.includes(period) ? period : 'daily';
+}
+
 // Cargar y sanitizar datos desde localStorage al iniciar
 let rawCategories = JSON.parse(localStorage.getItem('categories')) || [];
 let categories = Array.isArray(rawCategories)
@@ -154,7 +160,14 @@ function updateSummary() {
     
     if (!periodSelect || !specificDateInput) return;
     
-    const period = periodSelect.value;
+    // Sanitización y validación del período
+    const rawPeriod = periodSelect.value;
+    const period = sanitizePeriod(rawPeriod);
+    
+    // Si el valor era inválido (ej. inyectado por consola), sincronizamos la UI
+    if (rawPeriod !== period) {
+        periodSelect.value = period;
+    }
     
     // Mostrar u ocultar el selector de fecha
     if (period === 'daily' || period === 'weekly' || period === 'monthly') {
@@ -168,9 +181,18 @@ function updateSummary() {
     
     // Determinar la fecha de referencia para el filtro
     let targetDate = today;
-    if (specificDateInput.value) {
-        const [year, month, day] = specificDateInput.value.split('-').map(Number);
+    const rawDate = specificDateInput.value;
+    const sanitizedDateStr = sanitizeDate(rawDate);
+
+    if (sanitizedDateStr) {
+        const [year, month, day] = sanitizedDateStr.split('-').map(Number);
         targetDate = new Date(year, month - 1, day);
+    } else {
+        // Si el valor en el input es inválido, forzamos la fecha de hoy
+        const todayStr = today.toISOString().split('T')[0];
+        if (rawDate !== todayStr) {
+            specificDateInput.value = todayStr;
+        }
     }
 
     let total = 0;
