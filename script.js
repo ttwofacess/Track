@@ -395,20 +395,28 @@ document.getElementById('specificDate').addEventListener('change', updateSummary
 const today = new Date();
 const todayStr = today.toISOString().split('T')[0];
 
+// Límites de fecha: 10 años atrás, 1 año futuro
+const minDate = new Date();
+minDate.setFullYear(today.getFullYear() - 10);
+const maxDate = new Date();
+maxDate.setFullYear(today.getFullYear() + 1);
+
+const minDateStr = minDate.toISOString().split('T')[0];
+const maxDateStr = maxDate.toISOString().split('T')[0];
+
 const dateInput = document.getElementById('date');
 if (dateInput) {
-    // Configurar límites para el input
-    const minDate = new Date();
-    minDate.setFullYear(today.getFullYear() - 10);
-    const maxDate = new Date();
-    maxDate.setFullYear(today.getFullYear() + 1);
-
-    dateInput.min = minDate.toISOString().split('T')[0];
-    dateInput.max = maxDate.toISOString().split('T')[0];
+    dateInput.min = minDateStr;
+    dateInput.max = maxDateStr;
     dateInput.value = todayStr; // Valor por defecto: hoy
 }
 
-document.getElementById('specificDate').value = todayStr;
+const specificDateInput = document.getElementById('specificDate');
+if (specificDateInput) {
+    specificDateInput.min = minDateStr;
+    specificDateInput.max = maxDateStr;
+    specificDateInput.value = todayStr;
+}
 
 renderCategories();
 renderExpenses();
