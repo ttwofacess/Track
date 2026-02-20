@@ -208,8 +208,11 @@ function updateSummary() {
         } else if (period === 'weekly') {
             const startOfWeek = new Date(targetDate);
             startOfWeek.setDate(targetDate.getDate() - targetDate.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
             
             include = expenseDate >= startOfWeek && expenseDate <= endOfWeek;
         } else if (period === 'monthly') {
@@ -233,7 +236,47 @@ function renderExpenses() {
     if (!expenseList) return;
     expenseList.innerHTML = '';
 
-    expenses.forEach(expense => {
+    const periodSelect = document.getElementById('periodSelect');
+    const specificDateInput = document.getElementById('specificDate');
+    
+    if (!periodSelect || !specificDateInput) return;
+    
+    const period = sanitizePeriod(periodSelect.value);
+    const sanitizedDateStr = sanitizeDate(specificDateInput.value);
+    
+    let targetDate = null;
+    if (sanitizedDateStr) {
+        const [year, month, day] = sanitizedDateStr.split('-').map(Number);
+        targetDate = new Date(year, month - 1, day);
+    }
+
+    const filteredExpenses = expenses.filter(expense => {
+        if (period === 'total') return false;
+        if (!targetDate) return false;
+
+        const [year, month, day] = expense.date.split('-').map(Number);
+        const expenseDate = new Date(year, month - 1, day);
+
+        if (period === 'daily') {
+            return expenseDate.getTime() === targetDate.getTime();
+        } else if (period === 'weekly') {
+            const startOfWeek = new Date(targetDate);
+            startOfWeek.setDate(targetDate.getDate() - targetDate.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+            
+            return expenseDate >= startOfWeek && expenseDate <= endOfWeek;
+        } else if (period === 'monthly') {
+            return expenseDate.getMonth() === targetDate.getMonth() && 
+                   expenseDate.getFullYear() === targetDate.getFullYear();
+        }
+        return false;
+    });
+
+    filteredExpenses.forEach(expense => {
         const li = document.createElement('li');
 
         const details = document.createElement('div');
@@ -388,8 +431,8 @@ document.getElementById('expenseForm').addEventListener('submit', function(e) {
     e.preventDefault();
     saveExpense();
 });
-document.getElementById('periodSelect').addEventListener('change', updateSummary);
-document.getElementById('specificDate').addEventListener('change', updateSummary);
+document.getElementById('periodSelect').addEventListener('change', renderExpenses);
+document.getElementById('specificDate').addEventListener('change', renderExpenses);
 
 // Inicialización
 const today = new Date();
