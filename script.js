@@ -205,7 +205,17 @@ function updateSummary() {
 
         if (period === 'daily') {
             include = expenseDate.getTime() === targetDate.getTime();
-        } else if (period === 'weekly' || period === 'monthly') {
+        } else if (period === 'weekly') {
+            const startOfWeek = new Date(targetDate);
+            startOfWeek.setDate(targetDate.getDate() - targetDate.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+            
+            include = expenseDate >= startOfWeek && expenseDate <= endOfWeek;
+        } else if (period === 'monthly') {
             include = expenseDate.getMonth() === targetDate.getMonth() && 
                       expenseDate.getFullYear() === targetDate.getFullYear();
         } else if (period === 'total') {
@@ -249,7 +259,17 @@ function renderExpenses() {
 
         if (period === 'daily') {
             return expenseDate.getTime() === targetDate.getTime();
-        } else if (period === 'weekly' || period === 'monthly') {
+        } else if (period === 'weekly') {
+            const startOfWeek = new Date(targetDate);
+            startOfWeek.setDate(targetDate.getDate() - targetDate.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+            
+            return expenseDate >= startOfWeek && expenseDate <= endOfWeek;
+        } else if (period === 'monthly') {
             return expenseDate.getMonth() === targetDate.getMonth() && 
                    expenseDate.getFullYear() === targetDate.getFullYear();
         }
