@@ -37,38 +37,51 @@
 
             <!-- Sección para categorías -->
             <section class="categories-section">
-                <h2>Categorías</h2>
-                <div class="category-list" id="categoryList">
-                    <!-- Aquí se renderizarán las categorías -->
+                <div class="section-header">
+                    <h2>Categorías</h2>
+                    <button type="button" class="toggle-btn" data-target="categoriesContent">Mostrar</button>
                 </div>
-                <button id="addCategoryBtn">Agregar Categoría</button>
+                <div id="categoriesContent" class="hidden">
+                    <div class="category-list" id="categoryList">
+                        <!-- Aquí se renderizarán las categorías -->
+                    </div>
+                    <button id="addCategoryBtn">Agregar Categoría</button>
+                </div>
             </section>
 
             <!-- Resumen de Gastos -->
             <section class="summary-section">
-                <h2>Resumen de Gastos</h2>
-                <div class="summary-controls">
-                    <label for="periodSelect">Ver por:</label>
-                    <select id="periodSelect">
-                        <option value="daily">Diario</option>
-                        <option value="weekly">Semanal</option>
-                        <option value="monthly">Mensual</option>
-                        <option value="total">Total Histórico</option>
-                    </select>
-                    <div id="datePickerContainer" style="display: none; margin-top: 10px;">
-                        <label for="specificDate" id="datePickerLabel">Elegir fecha:</label>
-                        <input type="date" id="specificDate">
-                    </div>
+                <div class="section-header">
+                    <h2>Resumen de Gastos</h2>
+                    <button type="button" class="toggle-btn" data-target="summaryContent">Mostrar</button>
                 </div>
-                <div class="summary-total">
-                    <h3>Total: <span id="totalAmount">$0.00</span></h3>
+                <div id="summaryContent" class="hidden">
+                    <div class="summary-controls">
+                        <label for="periodSelect">Ver por:</label>
+                        <select id="periodSelect">
+                            <option value="daily">Diario</option>
+                            <option value="weekly">Semanal</option>
+                            <option value="monthly">Mensual</option>
+                            <option value="total">Total Histórico</option>
+                        </select>
+                        <div id="datePickerContainer" style="display: none; margin-top: 10px;">
+                            <label for="specificDate" id="datePickerLabel">Elegir fecha:</label>
+                            <input type="date" id="specificDate">
+                        </div>
+                    </div>
+                    <div class="summary-total">
+                        <h3>Total: <span id="totalAmount">$0.00</span></h3>
+                    </div>
                 </div>
             </section>
 
             <!-- Lista de gastos -->
             <section class="expenses-section">
-                <h2>Historial de Gastos</h2>
-                <ul id="expenseList">
+                <div class="section-header">
+                    <h2>Historial de Gastos</h2>
+                    <button type="button" class="toggle-btn" data-target="expenseList">Mostrar</button>
+                </div>
+                <ul id="expenseList" class="hidden">
                     <!-- Aquí se renderizarán los gastos -->
                 </ul>
             </section>
