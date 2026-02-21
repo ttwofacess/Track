@@ -18,8 +18,8 @@
 /* Dark theme tokens (applied with data-theme="dark" on <html>) */
 [data-theme="dark"]{
   --bg: #0b1220;
-  --surface: #0f1724;
-  --muted: #0b1228;
+  --surface: #1a2333; /* Slightly lighter for better contrast */
+  --muted: #111a2e;
   --text: #e6eef8;
   --subtext: #9aa4b2;
   --accent: #60a5fa;
