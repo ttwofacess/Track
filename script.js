@@ -408,6 +408,18 @@ function saveExpense() {
 // Event Listeners
 document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
 
+// Funcionalidad de Toggle para secciones
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const target = document.getElementById(targetId);
+        if (target) {
+            target.classList.toggle('hidden');
+            this.textContent = target.classList.contains('hidden') ? 'Mostrar' : 'Ocultar';
+        }
+    });
+});
+
 // Validación y sanitización del input 'amount' en tiempo real
 const amountInput = document.getElementById('amount');
 if (amountInput) {

@@ -105,8 +105,31 @@ form button:focus{ outline:none; box-shadow:0 0 0 5px rgba(37,99,235,0.12) }
 .expenses-section li .btn-group button:hover{ background:rgba(16,24,40,0.03); border-color:rgba(16,24,40,0.04) }
 
 /* Utilities */
-.muted{ color:var(--subtext) }
+.hidden{ display:none !important }
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+
+.section-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.toggle-btn{
+  background: var(--muted);
+  border: 1px solid rgba(16,24,40,0.1);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--subtext);
+  transition: all 0.1s ease;
+}
+
+.toggle-btn:hover{
+  background: rgba(16,24,40,0.05);
+  color: var(--text);
+}
 
 @media (min-width:720px){
   .main-content{ gap:28px }
