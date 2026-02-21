@@ -1,145 +1,117 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+:root{
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --muted: #f1f3f5;
+  --text: #111827;
+  --subtext: #6b7280;
+  --accent: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-1: 0 1px 2px rgba(16,24,40,0.04);
+  --shadow-2: 0 6px 20px rgba(16,24,40,0.08);
+  --space: 16px;
 }
 
-.app-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
+*{box-sizing:border-box}
+body{
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  margin:0;
+  padding:0;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-.header {
-    text-align: center;
-    margin-bottom: 30px;
+.app-container{
+  max-width:980px;
+  margin:0 auto;
+  padding:calc(var(--space) * 1.25);
 }
 
-.main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+.header{ text-align:center; margin-bottom:24px }
+.header h1{ margin:0; font-size:1.6rem; letter-spacing:-0.5px; color:var(--text) }
+.header p{ margin:6px 0 0; color:var(--subtext); font-size:0.95rem }
+
+.main-content{ display:flex; flex-direction:column; gap:24px }
+
+.expense-form, .categories-section, .expenses-section, .summary-section{
+  background:var(--surface);
+  padding:calc(var(--space) * 0.9);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-1);
+  border:1px solid rgba(16,24,40,0.03);
 }
 
-.expense-form, .categories-section, .expenses-section, .summary-section {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.summary-controls{ display:flex; flex-direction:column; gap:10px; margin-bottom:16px }
+.summary-controls select, .summary-controls input{
+  padding:10px 12px;
+  border-radius:var(--radius-sm);
+  font-size:14px;
+  background:linear-gradient(180deg, rgba(0,0,0,0.01), transparent);
+  border:1px solid rgba(16,24,40,0.06);
+  color:var(--text);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+  transition:box-shadow .18s ease, border-color .18s ease;
 }
+.summary-controls select:focus, .summary-controls input:focus{ outline:none; box-shadow:0 0 0 4px rgba(37,99,235,0.08); border-color:var(--accent) }
 
-.summary-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
+.summary-total h3{ margin:0; font-size:1.25rem; color:var(--text) }
+#totalAmount{ color:var(--success); font-weight:600 }
+
+form{ display:flex; flex-direction:column; gap:12px }
+form label{ font-weight:600; color:var(--subtext); font-size:0.95rem }
+form input, form select{
+  padding:10px 12px; font-size:15px; border-radius:var(--radius-sm);
+  border:1px solid rgba(16,24,40,0.06); background:var(--muted); color:var(--text);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
 }
+form input:focus, form select:focus{ outline:none; box-shadow:0 0 0 4px rgba(37,99,235,0.08); border-color:var(--accent) }
 
-.summary-controls select, .summary-controls input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
+/* Primary button */
+form button{
+  padding:10px 14px; font-size:15px; background:var(--accent); color:#fff; border:none;
+  border-radius:8px; cursor:pointer; box-shadow:var(--shadow-1); transition:transform .08s ease, background .12s ease;
 }
+form button:hover{ background:#1f4fd6; transform:translateY(-1px) }
+form button:active{ transform:translateY(0) }
+form button:focus{ outline:none; box-shadow:0 0 0 5px rgba(37,99,235,0.12) }
 
-.summary-total h3 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
+.category-list{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px }
+.category{
+  background:linear-gradient(180deg, rgba(16,24,40,0.02), transparent);
+  padding:8px 12px; border-radius:999px; display:flex; align-items:center; gap:8px;
+  color:var(--subtext); font-weight:600; font-size:0.95rem; border:1px solid rgba(16,24,40,0.03)
 }
+.category .btn-edit, .category .btn-delete{ background:none; border:none; cursor:pointer; font-size:13px; color:var(--accent) }
+.category .btn-delete{ color:var(--danger) }
 
-#totalAmount {
-    color: #28a745;
+.expenses-section ul{ list-style:none; padding:0; margin:0 }
+.expenses-section li{
+  background:var(--muted); padding:12px; margin-bottom:10px; border-radius:8px;
+  display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center; border:1px solid rgba(16,24,40,0.02)
 }
+.expenses-section li .expense-details{ display:flex; flex-direction:column; gap:4px }
+.expenses-section li .expense-title{ font-weight:600; color:var(--text) }
+.expenses-section li .expense-meta{ color:var(--subtext); font-size:0.9rem }
+.expenses-section li .amount{ font-weight:700; color:var(--text); margin-left:12px }
+.expenses-section li .amount.positive{ color:var(--success) }
+.expenses-section li .amount.negative{ color:var(--danger) }
+.expenses-section li .btn-group{ display:flex; gap:8px }
+.expenses-section li .btn-group button{ padding:6px 10px; font-size:13px; background:none; border-radius:6px; border:1px solid transparent; cursor:pointer; transition:background .12s ease, border-color .12s ease }
+.expenses-section li .btn-group button:hover{ background:rgba(16,24,40,0.03); border-color:rgba(16,24,40,0.04) }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+/* Utilities */
+.muted{ color:var(--subtext) }
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
 
-form label {
-    font-weight: bold;
-}
-
-form input, form select {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-form button {
-    padding: 10px;
-    font-size: 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #218838;
-}
-
-.category-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.category {
-    background-color: #e9ecef;
-    padding: 10px 15px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.category .btn-edit, .category .btn-delete {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    color: #007bff;
-}
-
-.category .btn-delete {
-    color: #dc3545;
-}
-
-.expenses-section ul {
-    list-style: none;
-    padding: 0;
-}
-
-.expenses-section li {
-    background: #f8f9fa;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.expenses-section li .expense-details {
-    flex: 1;
-}
-
-.expenses-section li .btn-group {
-    display: flex;
-    gap: 5px;
-}
-
-.expenses-section li .btn-group button {
-    padding: 6px 10px;
-    font-size: 14px;
-    background: none;
-    border: none;
-    cursor: pointer;
+@media (min-width:720px){
+  .main-content{ gap:28px }
+  .summary-controls{ flex-direction:row; align-items:center }
+  form{ flex-direction:row; align-items:end }
+  form > *{ flex:1 }
+  form button{ flex:0 0 auto }
 }
