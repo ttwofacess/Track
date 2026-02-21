@@ -111,7 +111,26 @@ form button:focus{ outline:none; box-shadow:0 0 0 5px rgba(37,99,235,0.12) }
 @media (min-width:720px){
   .main-content{ gap:28px }
   .summary-controls{ flex-direction:row; align-items:center }
-  form{ flex-direction:row; align-items:end }
-  form > *{ flex:1 }
-  form button{ flex:0 0 auto }
+  form{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:12px;
+  }
+  /* labels align with inputs: same width and centered above each control */
+  form label{
+    flex:0 0 auto;
+    width:calc(50% - 12px);
+    margin:0 auto 4px;
+    text-align:left;
+  }
+  /* inputs/selects share horizontal space in two columns and stay centered */
+  form input, form select{
+    flex:0 0 auto;
+    width:calc(50% - 12px);
+    min-width:220px;
+    margin:0 auto;
+  }
+  /* button sits on its own row and is centered */
+  form button{ flex:0 0 100%; max-width:240px; margin:8px auto 0 }
 }
