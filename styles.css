@@ -15,6 +15,20 @@
   --space: 16px;
 }
 
+/* Dark theme tokens (applied with data-theme="dark" on <html>) */
+[data-theme="dark"]{
+  --bg: #0b1220;
+  --surface: #1a2333; /* Slightly lighter for better contrast */
+  --muted: #111a2e;
+  --text: #e6eef8;
+  --subtext: #9aa4b2;
+  --accent: #60a5fa;
+  --success: #34d399;
+  --danger: #fb7185;
+  --shadow-1: 0 1px 2px rgba(2,6,23,0.6);
+  --shadow-2: 0 6px 20px rgba(2,6,23,0.6);
+}
+
 *{box-sizing:border-box}
 body{
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
@@ -32,9 +46,27 @@ body{
   padding:calc(var(--space) * 1.25);
 }
 
-.header{ text-align:center; margin-bottom:24px }
+.header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:24px;
+}
+.header .title{ flex:1; text-align:center }
 .header h1{ margin:0; font-size:1.6rem; letter-spacing:-0.5px; color:var(--text) }
 .header p{ margin:6px 0 0; color:var(--subtext); font-size:0.95rem }
+.header .controls{ flex:0 0 auto }
+
+/* Theme toggle button */
+.theme-toggle{
+  appearance:none; border:1px solid rgba(16,24,40,0.06); background:var(--muted); color:var(--text);
+  padding:6px 10px; border-radius:8px; cursor:pointer; font-size:16px; line-height:1; transition:background .12s ease, transform .08s ease;
+}
+.theme-toggle:hover{ transform:translateY(-1px) }
+.theme-toggle:focus{ outline:none; box-shadow:0 0 0 5px rgba(37,99,235,0.08) }
+
+/* Smooth theme transitions */
+html{ transition:background-color .18s ease, color .18s ease }
 
 .main-content{ display:flex; flex-direction:column; gap:24px }
 
@@ -101,7 +133,11 @@ form button:focus{ outline:none; box-shadow:0 0 0 5px rgba(37,99,235,0.12) }
 .expenses-section li .amount.positive{ color:var(--success) }
 .expenses-section li .amount.negative{ color:var(--danger) }
 .expenses-section li .btn-group{ display:flex; gap:8px }
-.expenses-section li .btn-group button{ padding:6px 10px; font-size:13px; background:none; border-radius:6px; border:1px solid transparent; cursor:pointer; transition:background .12s ease, border-color .12s ease }
+.expenses-section li .btn-group button{
+  padding:6px 10px; font-size:13px; background:none; border-radius:6px;
+  border:1px solid transparent; cursor:pointer; color:var(--text);
+  transition:background .12s ease, border-color .12s ease
+}
 .expenses-section li .btn-group button:hover{ background:rgba(16,24,40,0.03); border-color:rgba(16,24,40,0.04) }
 
 /* Utilities */
