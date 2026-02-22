@@ -133,7 +133,11 @@ form button:focus{ outline:none; box-shadow:0 0 0 5px rgba(37,99,235,0.12) }
 .expenses-section li .amount.positive{ color:var(--success) }
 .expenses-section li .amount.negative{ color:var(--danger) }
 .expenses-section li .btn-group{ display:flex; gap:8px }
-.expenses-section li .btn-group button{ padding:6px 10px; font-size:13px; background:none; border-radius:6px; border:1px solid transparent; cursor:pointer; transition:background .12s ease, border-color .12s ease }
+.expenses-section li .btn-group button{
+  padding:6px 10px; font-size:13px; background:none; border-radius:6px;
+  border:1px solid transparent; cursor:pointer; color:var(--text);
+  transition:background .12s ease, border-color .12s ease
+}
 .expenses-section li .btn-group button:hover{ background:rgba(16,24,40,0.03); border-color:rgba(16,24,40,0.04) }
 
 /* Utilities */
