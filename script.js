@@ -476,6 +476,56 @@ if (specificDateInput) {
 renderCategories();
 renderExpenses();
 
+// ── LÓGICA DE LA MODAL DE DONACIÓN ──
+const donateButton = document.getElementById('donateButton');
+const modal        = document.getElementById('donateModal');
+const closeButton  = document.querySelector('.close-button');
+
+if (donateButton && modal && closeButton) {
+    // Abrir modal
+    donateButton.onclick = () => { modal.style.display = 'block'; };
+
+    // Cerrar con el botón ×
+    closeButton.onclick = () => { modal.style.display = 'none'; };
+
+    // Cerrar al hacer clic fuera del contenido
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) modal.style.display = 'none';
+    });
+}
+
+// Copiar dirección al portapapeles
+document.querySelectorAll('.copy-button').forEach(button => {
+    button.addEventListener('click', (event) => {
+        const input = event.target
+            .previousElementSibling   // .crypto-info
+            .querySelector('input');
+        
+        if (input) {
+            input.select();
+            input.setSelectionRange(0, 99999); // Para móviles
+            
+            try {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    const originalText = button.textContent;
+                    button.textContent = '¡Copiado!';
+                    button.style.backgroundColor = 'var(--success)';
+                    setTimeout(() => { 
+                        button.textContent = originalText;
+                        button.style.backgroundColor = '';
+                    }, 2000);
+                });
+            } catch (err) {
+                // Fallback para navegadores antiguos
+                document.execCommand('copy');
+                const originalText = button.textContent;
+                button.textContent = '¡Copiado!';
+                setTimeout(() => { button.textContent = originalText; }, 2000);
+            }
+        }
+    });
+});
+
 // Theme toggle: apply and persist theme (uses data-theme on <html>)
 const themeToggle = document.getElementById('themeToggle');
 function applyTheme(theme){
