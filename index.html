@@ -89,7 +89,46 @@
                     <!-- Aquí se renderizarán los gastos -->
                 </ul>
             </section>
+
+            <!-- Botón de Donación -->
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="donateButton">Donar</button>
+            </div>
         </main>
+    </div>
+
+    <!-- ── MODAL DE DONACIÓN ── -->
+    <div id="donateModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Donar</h2>
+            <div class="crypto-options">
+                <div class="crypto-option">
+                    <div class="crypto-icon">₿</div>
+                    <div class="crypto-info">
+                        <span class="crypto-name">Bitcoin</span>
+                        <input type="text" value="bc1qxz4nxj8rzxzsnwj8u4rq46wy8dnf5h7yvzaqs2" readonly>
+                    </div>
+                    <button class="copy-button">Copiar</button>
+                </div>
+                <div class="crypto-option">
+                    <div class="crypto-icon">Ł</div>
+                    <div class="crypto-info">
+                        <span class="crypto-name">Litecoin</span>
+                        <input type="text" value="M8snytUjZP13KVTEHA4JCbHfy31Ve2xMr4" readonly>
+                    </div>
+                    <button class="copy-button">Copiar</button>
+                </div>
+                <div class="crypto-option">
+                    <div class="crypto-icon">$</div>
+                    <div class="crypto-info">
+                        <span class="crypto-name">USDT (TRC20)</span>
+                        <input type="text" value="TYsPkPyHbWN8cPuoDA7DohwhAdXWkVbQHm" readonly>
+                    </div>
+                    <button class="copy-button">Copiar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
