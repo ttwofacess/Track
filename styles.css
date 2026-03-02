@@ -121,6 +121,34 @@ form button:focus{ outline:none; box-shadow:0 0 0 5px rgba(37,99,235,0.12) }
 .category .btn-edit, .category .btn-delete{ background:none; border:none; cursor:pointer; font-size:13px; color:var(--accent) }
 .category .btn-delete{ color:var(--danger) }
 
+#addCategoryBtn {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 16px auto 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: var(--muted);
+  color: var(--accent);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-1);
+}
+
+#addCategoryBtn:hover {
+  background-color: var(--accent);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+#addCategoryBtn:active {
+  transform: translateY(0);
+}
+
 .expenses-section ul{ list-style:none; padding:0; margin:0 }
 .expenses-section li{
   background:var(--muted); padding:12px; margin-bottom:10px; border-radius:8px;
