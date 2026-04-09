@@ -405,8 +405,96 @@ function saveExpense() {
     if (form) form.reset();
 }
 
+// Función para exportar datos a JSON
+function exportData() {
+    const data = {
+        categories: categories,
+        expenses: expenses,
+        exportDate: new Date().toISOString(),
+        version: "1.0"
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gastos_hormiga_backup_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Función para importar datos desde JSON
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            // Validación básica de estructura
+            if (!data.categories || !data.expenses || !Array.isArray(data.categories) || !Array.isArray(data.expenses)) {
+                throw new Error("El archivo no tiene el formato correcto de Gastos Hormiga.");
+            }
+
+            if (!confirm("Al importar, se reemplazarán todas tus categorías y gastos actuales por los del archivo. ¿Deseas continuar?")) {
+                event.target.value = '';
+                return;
+            }
+
+            // Sanitización de categorías importadas
+            const importedCategories = data.categories
+                .map(sanitizeCategoryName)
+                .filter((c, i, arr) => c && arr.indexOf(c) === i);
+
+            if (importedCategories.length === 0) {
+                throw new Error("No se encontraron categorías válidas en el archivo.");
+            }
+
+            // Sanitización de gastos importados
+            const importedExpenses = data.expenses.map(exp => {
+                return {
+                    id: Number(exp.id) || Date.now() + Math.random(),
+                    category: sanitizeCategoryName(exp.category),
+                    amount: sanitizeAmount(exp.amount),
+                    date: sanitizeDate(exp.date),
+                    description: sanitizeDescription(exp.description)
+                };
+            }).filter(exp => 
+                exp.category && 
+                importedCategories.includes(exp.category) && 
+                !isNaN(exp.amount) && 
+                exp.date
+            );
+
+            // Actualizar estado global
+            categories = importedCategories;
+            expenses = importedExpenses;
+
+            // Persistir
+            localStorage.setItem('categories', JSON.stringify(categories));
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+
+            // Refrescar UI
+            renderCategories();
+            renderExpenses();
+            
+            alert(`Importación exitosa: ${importedCategories.length} categorías y ${importedExpenses.length} gastos cargados.`);
+        } catch (err) {
+            alert("Error al importar: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+    // Limpiar el input para permitir cargar el mismo archivo dos veces si se desea
+    event.target.value = '';
+}
+
 // Event Listeners
 document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
+document.getElementById('exportBtn').addEventListener('click', exportData);
+document.getElementById('importFile').addEventListener('change', importData);
 
 // Funcionalidad de Toggle para secciones
 document.querySelectorAll('.toggle-btn').forEach(btn => {

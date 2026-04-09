@@ -70,12 +70,45 @@ html{ transition:background-color .18s ease, color .18s ease }
 
 .main-content{ display:flex; flex-direction:column; gap:24px }
 
-.expense-form, .categories-section, .expenses-section, .summary-section{
+.expense-form, .categories-section, .expenses-section, .summary-section, .backup-section{
   background:var(--surface);
   padding:calc(var(--space) * 0.9);
   border-radius:var(--radius-md);
   box-shadow:var(--shadow-1);
   border:1px solid rgba(16,24,40,0.03);
+}
+
+.backup-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btn-backup {
+  display: inline-block;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: var(--muted);
+  color: var(--accent);
+  border: 1px solid rgba(37, 99, 235, 0.1);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-backup:hover {
+  background-color: var(--accent);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.backup-note {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--subtext);
 }
 
 .summary-controls{ display:flex; flex-direction:column; gap:10px; margin-bottom:16px }
