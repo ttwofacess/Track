@@ -1,0 +1,12 @@
+.backup-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.backup-note {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--subtext);
+}
