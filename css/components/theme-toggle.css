@@ -1,0 +1,6 @@
+.theme-toggle{
+  appearance:none; border:1px solid rgba(16,24,40,0.06); background:var(--muted); color:var(--text);
+  padding:6px 10px; border-radius:8px; cursor:pointer; font-size:16px; line-height:1; transition:background .12s ease, transform .08s ease;
+}
+.theme-toggle:hover{ transform:translateY(-1px) }
+.theme-toggle:focus{ outline:none; box-shadow:0 0 0 5px rgba(37,99,235,0.08) }

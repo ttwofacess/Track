@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>App para Gastos Hormiga</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="icon" href="./assets/favicon.ico" type="image/png">
 </head>
 <body>
@@ -17,8 +17,7 @@
         </header>
 
         <main class="main-content">
-            <!-- Formulario para agregar gastos -->
-            <section class="expense-form">
+            <section class="expense-form card">
                 <h2>Agregar Gasto</h2>
                 <form id="expenseForm">
                     <label for="category">Categoría:</label>
@@ -40,7 +39,7 @@
             </section>
 
             <!-- Sección para categorías -->
-            <section class="categories-section">
+            <section class="categories-section card">
                 <div class="section-header">
                     <h2>Categorías</h2>
                     <button type="button" class="toggle-btn" data-target="categoriesContent">Mostrar</button>
@@ -54,7 +53,7 @@
             </section>
 
             <!-- Resumen de Gastos -->
-            <section class="summary-section">
+            <section class="summary-section card">
                 <div class="section-header">
                     <h2>Resumen de Gastos</h2>
                     <button type="button" class="toggle-btn" data-target="summaryContent">Mostrar</button>
@@ -80,7 +79,7 @@
             </section>
 
             <!-- Lista de gastos -->
-            <section class="expenses-section">
+            <section class="expenses-section card">
                 <div class="section-header">
                     <h2>Historial de Gastos</h2>
                     <button type="button" class="toggle-btn" data-target="expenseList">Mostrar</button>
@@ -91,7 +90,7 @@
             </section>
 
             <!-- Sección de Copia de Seguridad -->
-            <section class="backup-section">
+            <section class="backup-section card">
                 <div class="section-header">
                     <h2>Copia de Seguridad</h2>
                 </div>

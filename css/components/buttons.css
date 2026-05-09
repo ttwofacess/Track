@@ -1,0 +1,142 @@
+/* Base button styles */
+.btn {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform .08s ease, background .12s ease, box-shadow .12s ease;
+}
+
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:focus { outline: none; }
+
+/* Primary button (mapped from form button) */
+.btn-primary,
+form button {
+  padding: 10px 14px;
+  font-size: 15px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+  transition: transform .08s ease, background .12s ease;
+}
+
+form button:hover,
+.btn-primary:hover {
+  background: #1f4fd6;
+  transform: translateY(-1px);
+}
+
+form button:active,
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+form button:focus,
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12);
+}
+
+/* Backup button */
+.btn-backup {
+  display: inline-block;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: var(--muted);
+  color: var(--accent);
+  border: 1px solid rgba(37, 99, 235, 0.1);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-backup:hover {
+  background-color: var(--accent);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Category Add Button */
+#addCategoryBtn {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 16px auto 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: var(--muted);
+  color: var(--accent);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-1);
+}
+
+#addCategoryBtn:hover {
+  background-color: var(--accent);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+#addCategoryBtn:active {
+  transform: translateY(0);
+}
+
+/* Toggle button */
+.toggle-btn{
+  background: var(--muted);
+  border: 1px solid rgba(16,24,40,0.1);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--subtext);
+  transition: all 0.1s ease;
+}
+
+.toggle-btn:hover{
+  background: rgba(16,24,40,0.05);
+  color: var(--text);
+}
+
+/* Donate button */
+#donateButton {
+    background-color: var(--accent);
+    color: white;
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    min-width: 120px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+#donateButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+/* Copy button */
+.copy-button {
+    background-color: var(--success);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    min-width: 80px;
+}
+.copy-button:hover { filter: brightness(1.1); }

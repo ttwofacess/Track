@@ -1,0 +1,18 @@
+.expenses-section ul{ list-style:none; padding:0; margin:0 }
+.expenses-section li{
+  background:var(--muted); padding:12px; margin-bottom:10px; border-radius:8px;
+  display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center; border:1px solid rgba(16,24,40,0.02)
+}
+.expenses-section li .expense-details{ display:flex; flex-direction:column; gap:4px }
+.expenses-section li .expense-title{ font-weight:600; color:var(--text) }
+.expenses-section li .expense-meta{ color:var(--subtext); font-size:0.9rem }
+.expenses-section li .amount{ font-weight:700; color:var(--text); margin-left:12px }
+.expenses-section li .amount.positive{ color:var(--success) }
+.expenses-section li .amount.negative{ color:var(--danger) }
+.expenses-section li .btn-group{ display:flex; gap:8px }
+.expenses-section li .btn-group button{
+  padding:6px 10px; font-size:13px; background:none; border-radius:6px;
+  border:1px solid transparent; cursor:pointer; color:var(--text);
+  transition:background .12s ease, border-color .12s ease
+}
+.expenses-section li .btn-group button:hover{ background:rgba(16,24,40,0.03); border-color:rgba(16,24,40,0.04) }

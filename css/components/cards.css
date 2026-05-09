@@ -1,0 +1,12 @@
+.card,
+.expense-form,
+.categories-section,
+.expenses-section,
+.summary-section,
+.backup-section {
+  background:var(--surface);
+  padding:calc(var(--space) * 0.9);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-1);
+  border:1px solid rgba(16,24,40,0.03);
+}
